@@ -226,6 +226,12 @@ module.exports = {
             ('Yemen'),
             ('Zambia'),
             ('Zimbabwe');
+
+            insert into cities (name, rating, country_id)
+            values ('Powder Springs', 5, 187),
+            ('Aarhus', 4, 47),
+            ('Johannesburg', 4, 162),
+            ('Port-au-Prince', 3, 73)
         `
       )
       .then(() => {
@@ -253,9 +259,11 @@ module.exports = {
   }, 
 
   getCities: (req, res) => {
-    sequelize.query(`SELECT c.city_id, c.name as city, c.rating, co.country_id, co.name as country from cities c
+    sequelize.query(`SELECT c.city_id, c.name as city, c.rating, co.country_id, co.name as country 
+    from cities c
     join countries co
-    on c.country_id = co.country_id`)
+    on c.country_id = co.country_id
+    order by c.rating desc`)
     .then((dbRes) => {
       res.status(200).send(dbRes[0])
     })
@@ -264,8 +272,7 @@ module.exports = {
 
   deleteCity: (req, res) => {
     let {id} = req.params
-    sequelize.query(`delete from cities where {$id} = city_id
-    `)
+    sequelize.query(`delete from cities where ${id} = city_id`)
     .then((dbRes) => {
       res.status(200).send(dbRes[0])
     })
